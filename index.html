@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+
+    <input id="message" type="text" value="Hello!">
+    <button id="send">Send</button>
+
+    <pre id="log"></pre>
+
+    <script>
+        const log = document.getElementById("log");
+
+        function writeLog(message) {
+            log.textContent += message + "\n";
+        }
+
+        const socket = new WebSocket(
+            "wss://mapgengame-back.onrender.com/ws"
+        );
+
+        socket.onopen = () => {
+            writeLog("Connected!");
+        };
+
+        socket.onmessage = (event) => {
+            writeLog("Server: " + event.data);
+        };
+
+        socket.onclose = () => {
+            writeLog("Disconnected.");
+        };
+
+        socket.onerror = (error) => {
+            writeLog("WebSocket error");
+            console.error(error);
+        };
+
+        document.getElementById("send").onclick = () => {
+            const message =
+                document.getElementById("message").value;
+
+            socket.send(message);
+            writeLog("Client: " + message);
+        };
+    </script>
+</body>
+</html>
